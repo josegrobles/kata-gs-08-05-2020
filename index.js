@@ -162,10 +162,9 @@ const getActionsToExecuteForLanguage = language => [...defaultActions, ...config
 
 const executeAction = (word = '', action) => mechanismForActions[action.type](word, action);
 
-const executeActions = (sentence, actions) => sentence.split(' ').reduce((finalSentence, currentWord) => {
-    const modifiedWord = actions.reduce((finalWord, currentAction) => executeAction(finalWord, currentAction), currentWord);
-    return modifiedWord ? [...finalSentence, modifiedWord.toUpperCase()] : finalSentence;
-} , [])
+const executeActionsForWord = (word, actions) => actions.reduce((finalWord, currentAction) => executeAction(finalWord, currentAction), word);
+
+const executeActions = (sentence, actions) => sentence.split(' ').map(word => executeActionsForWord(word, actions).toUpperCase()).filter(word => !!word)
 
 const sentenceFormatter = (sentence, language = 'ES') => {
     const actions = getActionsToExecuteForLanguage(language);
